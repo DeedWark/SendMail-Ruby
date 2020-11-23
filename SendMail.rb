@@ -113,12 +113,16 @@ end.parse!
 
 # AUTO MX RESOLVER W/ RCPT TO #
 def mxresolver()
-    domain = $rcptTo.split("@")[1]
-    if !domain.empty?
+    if !$rcptTo
+        print "RCPT TO:"
+        $rcptTo = STDIN.gets.chomp() #Get keyboard input
+    end
+    $domain = $rcptTo.split("@")[1] #cut @ and get only domain
+    if !$domain.empty?
         Resolv::DNS.open do |lookup|
-            ress = lookup.getresources domain, Resolv::DNS::Resource::IN::MX
+            ress = lookup.getresources $domain, Resolv::DNS::Resource::IN::MX
             mxlist = ress.map { |r| [r.exchange] }
-            $rMx = mxlist[0]
+            $rMx = mxlist[0] #get 1st mx
         end
     end
     if !$rMx
@@ -126,6 +130,10 @@ def mxresolver()
         print "SMTP: "
         $smtpServ = STDIN.gets.chomp()
     end
+end
+
+if !$port
+    $port = 25
 end
 
 ########
@@ -315,10 +323,9 @@ end
 ##############
 def sendEmail()
     require 'net/smtp'
-
     if !$optSmtpServ
-        #mxresolver()
-        $smtpServ = $rMx
+        mxresolver()
+        $smtpServ = $rMx.join("") #convert array into string
     else
         $smtpServ = $optSmtpServ
     end
@@ -328,11 +335,15 @@ def sendEmail()
         $rcptTo = STDIN.gets.chomp()
     end
 
-    Net::SMTP.start($smtpServ, $port) do |smtp|
-        smtp.send_message $MSG, $mailFrom, $rcptTo
-    end
-
-    puts GreenTXT+"Email sent! -> Message-ID: #{$messageid}"
+    begin
+        Net::SMTP.start($smtpServ, $port) do |smtp|
+            smtp.send_message $MSG, $mailFrom, $rcptTo
+            puts GreenTXT+"Email sent! -> Message-ID: #{$messageid}"+EndTXT
+        end
+    rescue => smtperror
+        puts RedTXT+"Cannot connect to SMTP -> #{$smtpServ.to_s}:#{$port}"+EndTXT
+        puts smtperror
+    end    
 end
 
 sendEmail()
