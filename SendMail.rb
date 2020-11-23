@@ -280,6 +280,7 @@ def attachment()
 
     $encodedFile = Base64.encode64($attachFile)
 end
+
 if $attach
     attachment()
     $addMSG = "Content-Type: multipart/mixed; boundary=#{$boundary}
@@ -317,12 +318,16 @@ X-Priority: #{$xprio}
 MIME-Version: 1.0
 #{$addMSG}"
 end
+defineBody()
 
 ##############
 # SEND EMAIL #
 ##############
 def sendEmail()
     require 'net/smtp'
+    puts "----OVERVIEW----"
+    puts $MSG
+    puts "------END------"
     if !$optSmtpServ
         mxresolver()
         $smtpServ = $rMx.join("") #convert array into string
