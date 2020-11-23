@@ -149,7 +149,7 @@ end
 # Message-ID #
 ##############
 random = SecureRandom.hex
-$messageid = "<#{random}@rubylang.this>"
+$messageid = "<#{random.upcase}@rubylang.this>"
 
 ###########
 # Charset #
