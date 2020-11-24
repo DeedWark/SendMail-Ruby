@@ -160,8 +160,6 @@ if $charset
     $charset = "\"UTF-8\""
    when "usascii", "us", "us-ascii"
     $charset = "\"US-ASCII\""
-   when "quoted-printable", "qp", "quoted", "printable"
-    $charset = "\"quoted-printable\""
    when "iso88591", "iso-88591", "iso8859-1", "iso-8859-1"
     $charset = "\"ISO-8859-1\""
    else
