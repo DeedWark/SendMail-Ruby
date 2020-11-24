@@ -157,18 +157,18 @@ $messageid = "<#{random.upcase}@rubylang.this>"
 if $charset
    case $charset.downcase
    when "utf-8", "utf8"
-    $charset = "UTF-8"       
+    $charset = "\"UTF-8\""
    when "usascii", "us", "us-ascii"
-    $charset = "US-ASCII"
+    $charset = "\"US-ASCII\""
    when "quoted-printable", "qp", "quoted", "printable"
-    $charset = "quoted-printable"
+    $charset = "\"quoted-printable\""
    when "iso88591", "iso-88591", "iso8859-1", "iso-8859-1"
-    $charset = "ISO-8859-1"
+    $charset = "\"ISO-8859-1\""
    else
-    $charset = "UTF-8"
+    $charset = "\"UTF-8\""
    end
 else
-    $charset = "UTF-8"
+    $charset = "\"UTF-8\""
 end
 
 ####################
@@ -307,7 +307,6 @@ Content-Transfer-Encoding: #{$encoding}
 #{$body}"
 end    
 
-def defineBody()
 $MSG = "Date: #{$date}
 From: #{$hFrom}
 To: #{$hTo}
@@ -317,8 +316,6 @@ X-Mailer: #{$xmailer}
 X-Priority: #{$xprio}
 MIME-Version: 1.0
 #{$addMSG}"
-end
-defineBody()
 
 ##############
 # SEND EMAIL #
