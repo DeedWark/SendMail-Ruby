@@ -2,7 +2,8 @@
 Send email in Ruby
 
 ## Usage
-``` ruby SendMail.rb --help
+```bash
+ruby SendMail.rb --help
 ```
 ```
   -s  	         Set SMTP/MX server (default "Autodetect with domain")
