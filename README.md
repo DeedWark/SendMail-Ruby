@@ -26,5 +26,5 @@ Send email in Ruby
 ```
 
 ```bash
-ruby SendMail-Ruby.rb
+ruby SendMail.rb
 ```
