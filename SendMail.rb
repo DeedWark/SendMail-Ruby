@@ -320,6 +320,11 @@ MIME-Version: 1.0
 # SEND EMAIL #
 ##############
 def sendEmail()
+    if !$rcptTo
+        print "RCPT TO: "
+        $rcptTo = STDIN.gets.chomp()
+    end
+
     require 'net/smtp'
     puts "----OVERVIEW----"
     puts $MSG
@@ -329,11 +334,6 @@ def sendEmail()
         $smtpServ = $rMx.join("") #convert array into string
     else
         $smtpServ = $optSmtpServ
-    end
-
-    if !$rcptTo
-        print "RCPT TO: "
-        $rcptTo = STDIN.gets.chomp()
     end
 
     begin
