@@ -336,9 +336,9 @@ def sendEmail()
     end
 
     require 'net/smtp'
-    puts "----OVERVIEW----"
+    puts GreenTXT+"---------------Overview---------------"+EndTXT
     puts $MSG
-    puts "------END------"
+    puts GreenTXT+"-----------------END------------------"+EndTXT
     if !$optSmtpServ
         mxresolver()
         $smtpServ = $rMx.join("") #convert array into string
@@ -349,10 +349,10 @@ def sendEmail()
     begin
         Net::SMTP.start($smtpServ, $port) do |smtp|
             smtp.send_message $MSG, $mailFrom, $rcptTo
-            puts GreenTXT+"Email sent! -> Message-ID: #{$messageid}"+EndTXT
+            puts "\n" + GreenTXT+"Email sent! -> Message-ID: #{$messageid}"+EndTXT
         end
     rescue => smtperror
-        puts RedTXT+"Cannot connect to SMTP -> #{$smtpServ.to_s}:#{$port}"+EndTXT
+        puts "\n" + RedTXT+"Cannot connect to SMTP -> #{$smtpServ.to_s}:#{$port}"+EndTXT
         puts smtperror
     end    
 end
