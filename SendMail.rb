@@ -208,19 +208,11 @@ def base64encode()
 end
 
 
-if $bs64
-    base64encode()
-end
-
 ############
 # Encoding #
 ############
 if $encoding
     case $encoding.downcase
-    when "7bit", "7-bit"
-        $encoding = "7bit"
-    when "8bit", "8-bit"
-        $encoding = "8bit"
     when "qp", "quoted", "quoted-printable", "printable"
         $encoding = "quoted-printable"
     else
@@ -228,6 +220,13 @@ if $encoding
     end
 else
     $encoding = "7bit"
+end
+
+##########
+# Base64 #
+##########
+if $bs64
+    base64encode() # and set $encoding = base64
 end
 
 ################
@@ -280,16 +279,20 @@ def attachment()
     $encodedFile = Base64.encode64($attachFile)
 end
 
+if !$boundary
+    $boundary = "----=_MIME_BOUNDARY_RUBY_LANG"
+end
+
 if $attach
     attachment()
-    $addMSG = "Content-Type: multipart/mixed; boundary=#{$boundary}
+    $addMSG = "Content-Type: multipart/mixed; boundary=\"#{$boundary}\"
 
-#{$boundary}
-Content-Type: #{$ctype}; charsert=#{$charset}
-Content-Transfer-Encoding: #{$charset}
+--#{$boundary}
+Content-Type: #{$ctype}; charset=#{$charset}
+Content-Transfer-Encoding: #{$encoding}
 
 #{$body}
-#{$boundary}
+--#{$boundary}
 Content-Type: application/octet-stream; charset=#{$charset}; name=\"#{$attach}\"
 Content-Description: #{$attach}
 Content-Disposition: attachment; filename=\"#{$attach}\"
@@ -297,7 +300,7 @@ Content-Transfer-Encoding: base64
 
 #{$encodedFile}
 
-#{$boundary}
+--#{$boundary}--
 "
 else
     $addMSG = "Content-Type: #{$ctype}; charset=#{$charset}
@@ -316,8 +319,15 @@ X-Priority: #{$xprio}
 MIME-Version: 1.0
 #{$addMSG}"
 
+###################
+###################
+if !$rcptTo
+    print "RCPT TO: "
+    $rcptTo = STDIN.gets.chomp()
+end
+
 ##############
-# SEND EMAIL #
+# SEND EMAIL #
 ##############
 def sendEmail()
     if !$rcptTo
