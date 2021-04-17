@@ -24,8 +24,10 @@ ruby SendMail.rb --help
 --text-file      Import a TXT file as body
 --boundary       Set a custom boundary (default "------=_MIME_BOUNDARY_RUBY_LANG--")
 --content-type   Set a custom Content-Type (default "text/plain")
+--encoding       Set an encoding (default "7bit")
 --base64         Encode body in base64
---prompt         Get a prompt to write on your terminal 
+--prompt         Get a prompt to write on your terminal
+--save           Save email to an EML file
 ```
 
 ```bash
