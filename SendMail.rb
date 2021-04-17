@@ -30,8 +30,11 @@ def usage()
 --text-file      Import a TXT file as body
 --boundary       Set a custom boundary (default "------=_MIME_BOUNDARY_RUBY_LANG--")
 --content-type   Set a custom Content-Type (default "text/plain")
+--encoding       Set an encoding (default "7bit")
 --base64         Encode body in base64
---prompt         Get a prompt to write on your terminal '
+--prompt         Get a prompt to write on your terminal
+--save           Save email to an EML file
+'
 end
 
 # FLAGS #
@@ -70,9 +73,9 @@ OptionParser.new do |parser|
     parser.on("--attach FILE", "Add an attachment") do |attach|
         $attach = attach
     end
-    parser.on("--auth", "Enable authentication (Gmail/Outlook)") do |auth|
-        $auth = auth
-    end
+    #parser.on("--auth", "Enable authentication (Gmail/Outlook)") do |auth|
+    #    $auth = auth
+    #end
     parser.on("-h", "--help", "-help", "Display help") do |help|
         usage()
     end
@@ -107,8 +110,11 @@ OptionParser.new do |parser|
     parser.on("--base64", "Encode body in base64") do |bs64|
         $bs64 = bs64
     end
-    parser.on("--body-prompt", "Write content with a Prompt (HTML allowed)") do |prompContent|
+    parser.on("--prompt", "Write content with a Prompt (HTML allowed)") do |prompContent|
         $promptContent = prompContent
+    end
+    parser.on("--save", "Save email to EML file") do |save|
+        $save = save
     end
 end.parse!
 
@@ -318,6 +324,17 @@ X-Mailer: #{$xmailer}
 X-Priority: #{$xprio}
 MIME-Version: 1.0
 #{$addMSG}"
+
+#####################
+# SAVE EMAIL as EML #
+#####################
+def saveEmail()
+    outputFile = File.open("savedEmail.eml", "w") { |f| f.write $MSG}
+end
+
+if $save
+    saveEmail()
+end
 
 ###################
 ###################
